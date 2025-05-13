@@ -1,0 +1,119 @@
+[gd_scene load_steps=9 format=3 uid="uid://yj1ghi2jfkpk"]
+
+[ext_resource type="VideoStream" uid="uid://dfa7ppskusk8u" path="res://Без-имени-1-_online-video-cutter.com_-_1_-_1_.ogv" id="1_epypp"]
+[ext_resource type="FontFile" uid="uid://dkoq78lbymr6b" path="res://MercutioNbpBasic.ttf" id="2_0hol4"]
+[ext_resource type="Texture2D" uid="uid://cu6uwqx8apb50" path="res://pngwing.com.png" id="3_q6r6c"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_epypp"]
+font = ExtResource("2_0hol4")
+font_size = 146
+font_color = Color(0, 0, 0, 1)
+outline_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_kdubu"]
+font = ExtResource("2_0hol4")
+font_size = 146
+font_color = Color(0, 0, 0, 1)
+outline_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_d21ai"]
+font = ExtResource("2_0hol4")
+font_size = 60
+font_color = Color(0, 0, 0, 1)
+outline_size = 10
+
+[sub_resource type="GDScript" id="GDScript_epypp"]
+script/source = "extends Label
+
+var font_size_step = 1
+var time_accumulator = 0.0
+var change_interval = 0.3  # Интервал в секундах (0.1 — примерно 10 изменений в секунду)
+
+func _process(delta):
+	time_accumulator += delta
+	if time_accumulator >= change_interval:
+		time_accumulator -= change_interval
+		
+		if label_settings.font_size > 61:
+			font_size_step = -1
+		elif label_settings.font_size < 60:
+			font_size_step = 1
+
+		label_settings.font_size += font_size_step
+"
+
+[sub_resource type="GDScript" id="GDScript_0hol4"]
+script/source = "extends Sprite2D
+@onready var per = false
+@onready var pot = false
+func _input(event: InputEvent) -> void:
+	if InputEventMouseButton and event.is_pressed():
+		per = true
+
+
+
+func _physics_process(delta: float) -> void:
+	if per == true:
+		if pot == false:
+			$ColorRect.color = Color(0, 0, 0, lerp($ColorRect.color[3],1.0,0.03))
+		if $ColorRect.color[3] >= 0.9:
+			get_tree().change_scene_to_file('menu.tscn')
+"
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1026.0
+offset_bottom = 975.0
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 0
+offset_right = 1026.0
+offset_bottom = 1024.0
+stream = ExtResource("1_epypp")
+autoplay = true
+loop = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 594.0
+offset_top = 300.0
+offset_right = 1013.0
+offset_bottom = 447.0
+text = "academy"
+label_settings = SubResource("LabelSettings_epypp")
+uppercase = true
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 107.0
+offset_top = 212.0
+offset_right = 381.0
+offset_bottom = 359.0
+text = "godot"
+label_settings = SubResource("LabelSettings_kdubu")
+uppercase = true
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 862.0
+offset_right = 1010.0
+offset_bottom = 999.0
+text = "Нажмите любую кнопку, чтобы начать"
+label_settings = SubResource("LabelSettings_d21ai")
+horizontal_alignment = 1
+script = SubResource("GDScript_epypp")
+
+[node name="Pngwing_com" type="Sprite2D" parent="."]
+position = Vector2(512, 516)
+scale = Vector2(0.0636667, 0.064)
+texture = ExtResource("3_q6r6c")
+script = SubResource("GDScript_0hol4")
+
+[node name="ColorRect" type="ColorRect" parent="Pngwing_com"]
+offset_left = -8042.0
+offset_top = -8062.0
+offset_right = 8042.0
+offset_bottom = 7125.0
+color = Color(0, 0, 0, 0)
